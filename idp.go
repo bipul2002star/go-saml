@@ -234,7 +234,7 @@ func (idp *IdentityProvider) parseSpX509Certificate() error {
 
 func (idp *IdentityProvider) parsePrivateKey() error {
 	if idp.IDPKey == "" {
-		return errors.New("SAML Configuration: IDP Private Key is empty")
+		return errors.New("SAML Configuration: IDP Private Key is empty\n")
 	}
 	privateKey, err := util.ParseRsaPrivateKeyPem(idp.IDPKey)
 	if err != nil {
@@ -260,31 +260,31 @@ func (idp *IdentityProvider) validate() error {
 		}
 	}
 	if idp.Issuer == "" {
-		return errors.New("SAML Configuration: Issuer is empty")
+		return errors.New("SAML Configuration: Issuer is empty\n")
 	}
 	if idp.ACSLocation == "" {
-		return errors.New("SAML Configuration: ACSLocation is empty")
+		return errors.New("SAML Configuration: ACSLocation is empty\n")
 	}
 
 	if idp.ACSBinging == "" {
-		return errors.New("SAML Configuration: ACSBinging is empty")
+		return errors.New("SAML Configuration: ACSBinging is empty\n")
 	}
 
 	if idp.ACSBinging != "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" {
-		return errors.New("SAML Configuration: ACSBinging is invalid")
+		return errors.New("SAML Configuration: ACSBinging is invalid\n")
 	}
 
 	if idp.NameIdentifierFormat == "" {
-		return errors.New("SAML Configuration: NameID Format is empty")
+		return errors.New("SAML Configuration: NameID Format is empty\n")
 	}
 	if idp.NameIdentifier == "" {
-		return errors.New("SAML Configuration: NameID value is empty")
+		return errors.New("SAML Configuration: NameID value is empty\n")
 	}
 	if idp.SessionIndex == "" {
-		return errors.New("SAML Configuration: SessionIndex is empty")
+		return errors.New("SAML Configuration: SessionIndex is empty\n")
 	}
 	if len(idp.Audiences) == 0 {
-		return errors.New("SAML Configuration: Audience is empty")
+		return errors.New("SAML Configuration: Audience is empty\n")
 	}
 	if len(idp.Attributes) > 0 {
 		for _, attr := range idp.Attributes {
@@ -292,13 +292,13 @@ func (idp *IdentityProvider) validate() error {
 			attrFormat, attrFormatOk := attr["Format"]
 			_, attrValueOk := attr["Value"]
 			if !(attrNameOk && attrName != "") {
-				return errors.New("SAML Configuration: Attributes Name is not defined or empty")
+				return errors.New("SAML Configuration: Attributes Name is not defined or empty\n")
 			}
 			if !(attrFormatOk && attrFormat != "") {
-				return errors.New("SAML Configuration: Attributes Format is not defined or empty")
+				return errors.New("SAML Configuration: Attributes Format is not defined or empty\n")
 			}
 			if !(attrValueOk) {
-				return errors.New("SAML Configuration: Attributes Value is not defined")
+				return errors.New("SAML Configuration: Attributes Value is not defined\n")
 			}
 		}
 	}
@@ -313,13 +313,13 @@ func prepareSamlRequestParam(method string, query url.Values, payload url.Values
 		sigAlg := query.Get("SigAlg")
 		signature := query.Get("Signature")
 		if samlRequest == "" {
-			return nil, errors.New("AuthnRequest: SamlRequest is not found")
+			return nil, errors.New("AuthnRequest: SamlRequest is not found\n")
 		}
 		/*if sigAlg==""{
-			return nil, errors.New("AuthnRequest: Signature Algo is not found")
+			return nil, errors.New("AuthnRequest: Signature Algo is not found\n")
 		}*/
 		/*if signature==""{
-			return nil, errors.New("AuthnRequest: signature is not found")
+			return nil, errors.New("AuthnRequest: signature is not found\n")
 		}*/
 		samlRequestParam.Signature = signature
 		samlRequestParam.RelayState = query.Get("RelayState")
@@ -327,18 +327,18 @@ func prepareSamlRequestParam(method string, query url.Values, payload url.Values
 		samlRequestParam.SigAlg = sigAlg
 		compressedRequest, err := base64.StdEncoding.DecodeString(query.Get("SAMLRequest"))
 		if err != nil {
-			return nil, fmt.Errorf("cannot decode request: %s", err)
+			return nil, fmt.Errorf("cannot decode request: %s\n", err)
 		}
 		samlRequestParam.RequestBuffer, err = ioutil.ReadAll(flate.NewReader(bytes.NewReader(compressedRequest)))
 		if err != nil {
-			return nil, fmt.Errorf("cannot decompress request: %s", err)
+			return nil, fmt.Errorf("cannot decompress request: %s\n", err)
 		}
 	case "POST":
 		var err error
 		samlRequest := payload.Get("SAMLRequest")
 		samlRequestParam.RelayState = payload.Get("RelayState")
 		if samlRequest == "" {
-			return nil, errors.New("AuthnRequest: SamlRequest is not found")
+			return nil, errors.New("AuthnRequest: SamlRequest is not found\n")
 		}
 		samlRequestParam.RequestBuffer, err = base64.StdEncoding.DecodeString(payload.Get("SAMLRequest"))
 		if err != nil {
