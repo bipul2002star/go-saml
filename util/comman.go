@@ -19,7 +19,7 @@ func ID() string {
 func ValidateCertificatePem(certPEM string) error {
 	block, _ := pem.Decode([]byte(certPEM))
 	if block == nil {
-		return errors.New("failed to parse certificate PEM")
+		return errors.New("failed to parse certificate PEM\n")
 	}
 	_, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
@@ -40,7 +40,7 @@ func GetRawCertificate(cert string) string {
 func ParseRsaPrivateKeyPem(privPEM string) (interface{}, error) {
 	block, _ := pem.Decode([]byte(privPEM))
 	if block == nil {
-		return nil, errors.New("failed to parse PEM block containing the key")
+		return nil, errors.New("failed to parse PEM block containing the key\n")
 	}
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
@@ -57,7 +57,7 @@ func ParseRsaPrivateKeyPem(privPEM string) (interface{}, error) {
 func ParseCertificatePem(certPEM string) (*x509.Certificate, error) {
 	block, _ := pem.Decode([]byte(certPEM))
 	if block == nil {
-		return nil, errors.New("failed to parse certificate PEM")
+		return nil, errors.New("failed to parse certificate PEM\n")
 	}
 	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
